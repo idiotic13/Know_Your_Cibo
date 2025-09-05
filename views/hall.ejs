@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+  <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+  <title>KnowYourCibo</title>
+  <link rel="stylesheet" href="loadStyle.css">
+  <link rel="stylesheet" href="stylepage.css">
+  <link rel="stylesheet" href="hallStyle.css">
+  <script src="hallScript.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js"></script>
+  <script>
+    var restaurantId = '<%= restaurant._id %>';  
+</script>
+
+
+
+</head>
+<div id="loading-overlay" class="loading-overlay">
+  <!-- Your loading animation or message -->
+  <div id="loading-animation"></div>
+  <p class="loading-text">Loading Your Cibo...</p>
+</div>
+
+<!-- nav bar -->
+<div class="original-content">
+<header class="wrapper">
+  <div >
+    <div class="nav">
+      <div class="logo">KnowYourCibo</div>
+
+      <div class="menu-links">
+        <ul>
+          <li><a href="/home">Home</a></li>
+       <li><a href="/home#restaurant-section">Restaurants</a></li>
+          <% if (isLoggedIn) { %>
+            <li><a href="/profile">Profile</a></li>
+            <!-- <a href="/logout">Logout</a> -->
+          <% }%>
+
+          <li><a href="/feedback">Feedback</a></li>
+          <!-- <li><a href="/">Contact us</a></li> -->
+        </ul>
+      </div>
+
+      <!-- <div class="search"><i class="fa fa-search"></i></div> -->
+      <a href="/searchPage" class="search">
+        <i class="fa fa-search"></i>
+      </a>
+
+
+      <% if (isLoggedIn) { %>
+        <div class="account">
+          <a href="/logout">Logout</a>
+        </div>
+      <% } else { %>
+        <div class="account">
+          <a href="/login">Login</a>
+        </div>
+      <% } %>
+      <!-- <div class="account"><a href="#">my account</a></div> -->
+
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- social media -->
+  <div class="social-media">
+        <ul>
+          <li>
+            <!-- Add the google maps share link here and make target to _blank to open gmaps in another tab. -->
+            <a href=" <%= restaurant.location %> " target="_blank">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+            </a>
+          </li>
+          <!-- <li><i class="fa fa-facebook" aria-hidden="true"></i></li>
+          <li><i class="fa fa-instagram" aria-hidden="true"></i></li>
+          <li><i class="fa fa-twitter" aria-hidden="true"></i></li> -->
+        </ul>
+  </div>
+
+  <!-- sidestrip -->
+  <div class="side-strip">
+        <span>EAT RATE CURATE</span>
+  </div>
+
+  <!-- body -->
+
+<div class="container">
+
+  <div class="left-container">
+
+    <h1><%= restaurant.Restaurant_name %></h1>
+      <!-- <p>Hall of Residence 1</p> -->
+      <!-- <p>Fifth Ave</p> -->
+      <p>IIT Kanpur</p>
+      <% if (menu.length > 0) { menu.forEach(item => { %>
+        <div id="review-section-<%= item._id %>" class="review-container" style="display:none;">
+          <% if (item.reviews && item.reviews.length > 0) { %>
+            <% item.reviews.forEach(review => { %>
+              <div class="reviews">
+                <div class="user-name">
+                  <h3><%= review.postedBy.firstName %></h3> <!-- Ensure firstName is defined -->
+                </div>
+                <div class="review-text">
+                  <p><%= review.comment %></p>
+                </div>
+              </div>
+            <% }); %> <!-- Closing forEach for reviews -->
+          <% } else { %>
+            <div class="reviews">
+              <div class="user-name">
+                <h3>Reviews</h3>
+              </div>
+              <div class="review-text">
+                <p>No reviews yet.</p>
+              </div>
+            </div>
+          <% } %>
+
+          <form id="review-form-<%= item._id %>" onsubmit="event.preventDefault(); addReview('<%= item._id %>');">
+            <div class="review-input-container">
+              <input id="review-input-<%= item._id %>" class="review-input" type="text" placeholder="Write a review..." name="review">
+              <button type="submit" class="review-button">+</button>
+            </div>
+          </form>
+
+        </div>
+      <% }); %> <!-- Closing forEach for items -->
+      <% } else { %>
+        <p>There are no items in this section of the restaurant.</p>
+      <% } %>
+
+
+      <!-- <h3>Ratings</h3> -->
+
+      <!-- here we display ratings -->
+      <div class="ratings">
+
+      </div>
+
+  </div>
+  <div class="right-container">
+
+    <h1>Categories</h1>
+  <section class="category">
+    <ul>
+      <li onclick="showSection('section1')" class="category-list"><a data-section="section1">Menu</a></li>
+      <% for (let i = 1; i <= restaurant.category.length; i++) { %>
+        <li onclick="showSection('section<%=i+1%>')" class="category-list"><a data-section="section<%=i+1%>"> <%= restaurant.category[i-1]  %> </a></li>
+        <% } %>
+
+    </ul>
+  </section>
+
+  <div class="mosaic-container">
+
+    <!-- content 1 -->
+    <div id="section1" class="section" style="display: block;">
+      <% if (menu.length > 0) { %>
+        <% menu.forEach(item => { %>
+          <div id="item-<%= item._id %>" class="tile">
+            <div class="inner">
+              <!-- write item.img in src section here -->
+              <div class="image"><img src="<%= item.image %>" alt=""></div>
+              <% if(isLoggedIn && user.fav_items.includes(`${item._id}`)){ %>
+                <!-- User favorite list -->
+                <i class="fas fa-heart heart-icon fa-2x custom-size clicked" id="heartIcon" data-info= <%=item._id %>></i>
+                <% } else {%>
+                  <!-- Not User favorite list -->
+                  <i class="fas fa-heart heart-icon fa-2x custom-size" id="heartIcon" data-info= <%=item._id %>></i>
+                  <% } %>
+              <div>
+                <div class="innertext">
+                  <h2><%= item.name %></h2>
+                 <h3>₹<%= item.price %></h3>
+                </div>
+              <div class="ratings-and-button-container">
+                <div class="rating-box">
+                  <div class="stars">
+                    <% for(let i = 1; i <= 5; i++) { %>
+                      <i class="fa fa-star <%= item.userRatingValue && i <= item.userRatingValue ? 'active' : '' %>" data-rating="<%= i %>"></i>
+                    <% } %>
+                  </div>
+                </div>
+                <button class="submit-rating-btn" data-item-id="<%= item._id %>" data-rated="<%= item.userHasRated %>">
+                  <%= item.userHasRated ? 'Remove rating' : 'Rate' %>
+                </button>
+              </div>
+              <div class="review-area">
+                <button class="review-btn" onclick="toggleReview('<%= item._id %>')">Review</button>
+                <div class="overall-rating">
+                  Rating: <%= item.overallRating.toFixed(1) %> / 5
+                    (<%= item.totalRatings %> ratings)
+                  </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>There are no items in this restaurant.<p>
+      <% } %>
+    </div>
+
+    <!-- Respective categories. -->
+    <% for (let i = 0; i < restaurant.category.length; i++) { %>
+      <div id="section<%= i + 2 %>" class="section" style="display: none;">
+        <% if (itemArray[restaurant.category[i]].length > 0) { %>
+          <% itemArray[restaurant.category[i]].forEach(item => { %>
+              <div id="item-<%= item._id %>" class="tile">
+              <div class="inner">
+                <!-- write item.img in src section here -->
+                <div class="image"><img src="<%= item.image %>" alt=""></div>
+                <% if(isLoggedIn && user.fav_items.includes(`${item._id}`)){ %>
+                  <!-- User favorite list -->
+                  <i class="fas fa-heart heart-icon fa-2x custom-size clicked" id="heartIcon" data-info= <%=item._id %>></i>
+                  <% } else {%>
+                    <!-- Not User favorite list -->
+                    <i class="fas fa-heart heart-icon fa-2x custom-size" id="heartIcon" data-info= <%=item._id %>></i>
+                    <% } %>
+                <div>
+                  <div class="innertext">
+                    <h2><%= item.name %></h2>
+                    <h3><%= item.price %></h3>
+                  </div>
+                  <div class="ratings-and-button-container">
+                    <div class="rating-box">
+                      <div class="stars">
+                        <% for(let i = 1; i <= 5; i++) { %>
+                          <i class="fa fa-star <%= item.userRatingValue && i <= item.userRatingValue ? 'active' : '' %>" data-rating="<%= i %>"></i>
+                        <% } %>
+                      </div>
+                    </div>
+                    <button class="submit-rating-btn" data-item-id="<%= item._id %>" data-rated="<%= item.userHasRated %>">
+                      <%= item.userHasRated ? 'Remove rating' : 'Rate' %>
+                    </button>
+                  </div>
+                  <div class="review-area">
+                    <!-- <button class="review-btn">Review</button> -->
+                    <button class="review-btn" onclick="toggleReview('<%= item._id %>')">Review</button>
+                    <div class="overall-rating">
+                      <% if (typeof item.overallRating !== 'undefined') { %>
+                        Rating: <%= item.overallRating.toFixed(1) %> / 5 (<%= item.totalRatings %> ratings)
+                      <% } else { %>
+                        No ratings available
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+          <% }) %>
+        <% } else { %>
+          <p>There are no items in this section of the restaurant.</p>
+        <% } %>
+      </div>
+    <% } %>
+    <!-- </div> -->
+
+</div>
+
+</div>
+<!-- Message Box (hidden by default) -->
+<div id="messageBox" class="message-box" style="display:none;">
+  <p id="messageBoxText"></p>
+  <button onclick="closeMessageBox()">OK</button>
+</div>
+<div id="messageBox1" class="message-box1" style="display:none;">
+  <p id="messageBoxText1"></p>
+  <button onclick="closeMessageBox1()">OK</button>
+</div>
+
+
+<!-- transitions -->
+  <script>
+
+    TweenMax.from(".logo", 1.2, {
+      delay: 1,
+      opacity: 0,
+      x: -20,
+      ease: Expo.easeInOut
+    })
+
+    TweenMax.staggerFrom(".menu-links ul li", 1.2, {
+      delay: 1.15,
+      opacity: 0,
+      x: -20,
+      ease: Power3.easeInOut
+    }, 0.08)
+
+    TweenMax.from(".search", 1.2, {
+      delay: 1.3,
+      opacity: 0,
+      x: -20,
+      ease: Expo.easeInOut
+    })
+
+    TweenMax.from(".account", 1.2, {
+      delay: 1.5,
+      opacity: 0,
+      x: -20,
+      ease: Expo.easeInOut
+    })
+
+    TweenMax.staggerFrom(".social-media ul li", 1.2, {
+    delay: 1.60,
+    opacity: 0,
+    y: 20,
+    ease: Power3.easeInOut
+  }, 0.08);
+
+  TweenMax.staggerFrom(".side-strip", 1.2, {
+  delay: 1.60,
+  opacity: 0,
+  y: 20,
+  ease: Power3.easeInOut
+}, 0.08);
+
+    TweenMax.staggerFrom(".left-container h1", 1.2, {
+    delay: 1.65,
+    opacity: 0,
+    x: -20,
+    ease: Expo.easeInOut
+  }, 0.08);
+
+  TweenMax.staggerFrom(".left-container p", 1.2, {
+  delay: 1.7,
+  opacity: 0,
+  x: -20,
+  ease: Expo.easeInOut
+}, 0.08);
+
+TweenMax.staggerFrom(".right-container h1", 1.2, {
+delay: 1.75,
+opacity: 0,
+x: -20,
+ease: Expo.easeInOut
+}, 0.08);
+
+TweenMax.staggerFrom(".category ul li", 1.2, {
+delay: 1.8,
+opacity: 0,
+x: -20,
+ease: Expo.easeInOut
+}, 0.08);
+
+TweenMax.staggerFrom(".tile", 1.2, {
+delay: 1.9,
+opacity: 0,
+x: -20,
+ease: Expo.easeInOut
+}, 0.08);
+
+
+  </script>
+ <script>
+  // Select all elements with the class "stars" and store them in a NodeList called "starContainers"
+  const starContainers = document.querySelectorAll(".stars");
+
+  // Loop through the "starContainers" NodeList
+  starContainers.forEach(starContainer => {
+    // Select all "i" elements within the current "starContainer" and store them in a NodeList called "stars"
+    const stars = starContainer.querySelectorAll("i");
+
+    // Loop through the "stars" NodeList
+    stars.forEach((star, index1) => {
+      // Add an event listener that runs a function when the "click" event is triggered
+      star.addEventListener("click", () => {
+        // Loop through the "stars" NodeList Again
+        stars.forEach((star, index2) => {
+          // Add the "active" class to the clicked star and any stars with a lower index
+          // and remove the "active" class from any stars with a higher index
+          index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
+        });
+      });
+    });
+  });
+</script>
+<script>
+  // Add a click event listener to all heart icons with the 'heart-icon' class
+  document.querySelectorAll('.heart-icon').forEach(function(icon) {
+  icon.addEventListener('click', async function(event) {
+    event.preventDefault();
+    const item_id = this.getAttribute("data-info");
+    const color = window.getComputedStyle(this).color;
+    try {
+      const response = await fetch("/like-item", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ item_id, color }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json(); // Assuming server sends error message in JSON format
+        throw new Error(errorData.error);
+      }
+      const data = await response.json();
+      
+      // Check the action performed (added to or removed from favorites)
+      if(this.classList.contains('clicked')) {
+        // If it's currently clicked, it was just added to favorites
+        alert('Removed from favorites');
+        window.location.href = `/Restaurants/${restaurantId}?scrollToItemId=${item_id}`;
+      } else {
+        // If not, it was just removed from favorites
+        alert('Added to favorites');
+        window.location.href = `/Restaurants/${restaurantId}?scrollToItemId=${item_id}`;
+      }
+
+      // Toggle the 'clicked' class based on the action
+      this.classList.toggle('clicked');
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error.message || "An error occurred while processing your request"); // Use the custom message box instead of alert
+    }
+  });
+});
+
+
+
+  function toggleReview(itemId) {
+  // First, hide all review containers
+  document.querySelectorAll('.review-container').forEach((container) => {
+    if (container.id !== 'review-section-' + itemId) {
+      $(container).hide();
+    }
+  });
+
+  // Then, toggle the display of the current item's review container
+  const reviewSection = document.getElementById('review-section-' + itemId);
+  if (reviewSection) {
+    $(reviewSection).toggle(); // Use jQuery to toggle visibility
+  }
+}
+
+function addReview(itemId) {
+  const form = document.getElementById('review-form-' + itemId);
+  const reviewInput = document.querySelector(`#review-form-${itemId} .review-input`);
+  const comment = reviewInput.value.trim();
+
+  if (!comment) {
+    alert('Please enter a review.');
+    return;
+  }
+
+  fetch(`/item/${itemId}/review`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Add any required authentication headers here
+    },
+    body: JSON.stringify({ comment: comment })
+  })
+  .then(response => {
+  if (!response.ok) {
+    // If the response status code is not in the 200 range
+    if (response.status === 401) {
+      // If the user is not authorized, prompt them to log in
+      alert('You must be logged in to add a review.');
+    }
+    throw new Error('Response not ok');
+  }
+  return response.json();
+})
+
+ .then(data => {
+  reviewInput.value = '';
+ alert('Review added successfully.');
+// Assuming `restaurantId` is defined in the scope
+window.location.href = `/Restaurants/${restaurantId}?scrollToItemId=${itemId}`;
+
+
+})
+.catch(error => {
+  console.error('Error:', error);
+});
+}
+</script>
+
+<% if (scrollToItemId) { %>
+  <script>
+    // Wait for the DOM content to be fully loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set a timeout that matches the loader animation duration
+      setTimeout(function() {
+        // Show the correct category section
+        const scrollToItemElement = document.getElementById('item-' + '<%= scrollToItemId %>');
+        if (scrollToItemElement) {
+          // Find the parent section of the item
+          const parentSection = scrollToItemElement.closest('.section');
+          // Show the parent section
+          if (parentSection) {
+            // Hide all sections first
+            document.querySelectorAll('.section').forEach(section => {
+              section.style.display = 'none';
+            });
+            // Show the parent section of the item
+            parentSection.style.display = 'block';
+          }
+          // Scroll to the item
+          scrollToItemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 1000); // Adjust the delay as needed to match the loader timeout
+    });
+  </script>
+<% } %>
+
+  <script>
+  $(document).ready(function() {
+  $('.submit-rating-btn').click(function() {
+    const $thisButton = $(this); // The current "Rate" or "Remove rating" button
+    const itemId = $thisButton.data('item-id'); // ID of the item being rated
+    const isRated = $thisButton.data('rated'); // Whether the user has already rated this item
+    if (!isRated && $thisButton.siblings('.rating-box').find('.fa-star.active').length === 0) {
+        alert('Please select a rating.'); // Prompt the user with an error message
+        return; // Exit the function early if no stars are selected
+      }
+    // Prepare the data to be sent in the AJAX request
+    let requestData = { itemId: itemId };
+    let requestUrl = isRated ? '/remove-rating' : '/submit-rating';
+    
+    if (!isRated) {
+      // If submitting a new rating, get the rating value
+      const rating = $thisButton.siblings('.rating-box').find('.fa-star.active').length;
+      requestData.rating = rating;
+    }
+    
+    // Make the AJAX request
+    $.ajax({
+      type: 'POST',
+      url: requestUrl,
+      data: requestData,
+      success: function(response) {
+        alert(response.message);
+        window.location.href = `/Restaurants/${restaurantId}?scrollToItemId=${itemId}`;
+      
+        if (isRated) {
+          // If the rating was removed, reset the stars
+          $thisButton.siblings('.rating-box').find('.fa-star').removeClass('active');
+          $thisButton.text('Rate').data('rated', false); // Update the button
+        } else {
+          // If a rating was submitted, update the button to allow removal
+          $thisButton.text('Remove rating').data('rated', true);
+        }
+
+      },
+      error: function(xhr, status, error) {
+        if (xhr.status === 401) {
+          alert('You must be logged in to rate items.'); // Use the custom message box
+        } else {
+          console.error('Error updating rating:', error);
+          alert('Failed to update rating. Please try again.');
+          window.location.href = `/Restaurants/${restaurantId}?scrollToItemId=${itemId}`;
+        }
+      }
+    });
+  });
+});
+
+  </script>
+  <script>
+    $(document).ready(function(){
+      $(".review-btn").click(function(){
+        $("#div1").toggle();
+      });
+    });
+    // Function to show the message box with a specific message
+function showMessage(message) {
+    $("#messageBoxText").text(message);
+    $("#messageBox").fadeIn();
+}
+
+// Function to hide the message box and reload the page
+function closeMessageBox() {
+    $("#messageBox").fadeOut('fast', function() {
+        window.location.reload(); // Reload the page after closing the message box
+    });
+}
+function showMessage1(message) {
+    $("#messageBoxText1").text(message);
+    $("#messageBox1").fadeIn();
+}
+
+// Function to hide the message box and reload the page
+function closeMessageBox1() {
+    $("#messageBox1").fadeOut('fast', function() {
+    });
+}
+
+
+  </script>
+  <script>
+ document.addEventListener("DOMContentLoaded", function() {
+  // Show loading overlay
+  document.getElementById("loading-overlay").style.display = "flex";
+  // Hide original content
+  document.querySelector(".original-content").style.display = "none";
+
+  // Add a delay to simulate loading (remove this in production)
+  setTimeout(function() {
+    // Hide loading overlay
+    document.getElementById("loading-overlay").style.display = "none";
+    // Show original content
+    document.querySelector(".original-content").style.display = "block";
+  }, 1000); // Adjust the delay as needed (e.g., 3000 milliseconds = 3 seconds)
+});
+
+</script>
+</div>
+</body>
+
+</html>
+

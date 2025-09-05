@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+  <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
+  <title>KnowYourCibo</title>
+  <link rel="stylesheet" href="homeStyle.css">
+  <script src="homeScript.js" async></script>
+  <script src="restaurants.js" async></script>
+</head>
+
+
+
+<body>
+
+   <% if (enableAnimations) { %>
+    <link rel="stylesheet" href="home_anim.css">
+
+  
+  <div class="temp"></div>
+  <div class="first-block"></div>
+  <div class="second-block"></div>
+  <div class="loader">
+        <ul>
+              <li>K</li>
+              <li>N</li>
+              <li>O</li>
+              <li>W</li>
+              <li>Y</li>
+              <li>O</li>
+              <li>U</li>
+              <li>R</li>
+              <li>C</li>
+              <li>I</li>
+              <li>B</li>
+              <li>O</li>
+        </ul>
+  </div> 
+  <% } %>
+
+<section class="section" id="section0">
+
+  <div class="heading">
+    <h1>KNOWYOURCIBO</h1>
+  </div>
+  <div class="scrollpart">
+
+    <header class="wrapper">
+        <div >
+          <div class="nav">
+           
+      
+            <div class="menu-links">
+              <ul>
+                <li><a href="/home">Home</a></li>
+           <li><a href="/home#restaurant-section">Restaurants</a></li>
+                <% if (isLoggedIn) { %>
+                  <li><a href="/profile">Profile</a></li>
+                  <!-- <a href="/logout">Logout</a> -->
+                <% }%>
+                
+                <li><a href="/Feedback">Feedback</a></li>
+              </ul>
+            </div>
+      
+            <a href="/searchPage" class="search">
+              <i class="fa fa-search"></i>
+          </a>
+          
+      
+             <!-- <div class="account"> -->
+              <% if (isLoggedIn) { %>
+                  <span class= "username">Hello, <%= userFirstName %> </span>
+                  <div class="account">
+                    <a href="/logout">Logout</a>
+                  </div>
+                <% } else { %>
+                  <div class="account">
+                    <a href="/login">Login</a>
+                  </div>
+                <% } %>
+            <!-- </div> -->
+            
+          </div>
+        </div>
+      </header>
+    <div class="side-strip">
+          <span>EAT RATE CURATE</span>
+    </div>
+
+    <div class="scrolling">
+
+      <div class="slideshow-container">
+
+        
+        <div class="slider">
+          <div class="slideshow-container">
+
+            <div class="mySlides fade" id="img">
+              <img src="homeImages/b1.jpeg" >
+            </div>
+            <div class="mySlides fade" id="img">
+              <img src="homeImages/b2.jpeg">
+            </div>
+            
+            <div class="mySlides fade" id="img">
+              <img src="homeImages/b3.jpeg" >
+            </div>
+            <div class="mySlides fade" id="img">
+              <img src="homeImages/b4.jpeg">
+            </div>
+            
+            <div class="mySlides fade" id="img">
+              <img src="homeImages/b5.jpeg" >
+            </div>
+            <div class="mySlides fade" id="img">
+              <img src="homeImages/b6.jpeg" >
+            </div>
+            </div>
+            <br>
+            
+            <div style="text-align:center">
+              <span class="dot"></span> 
+              <span class="dot"></span> 
+              <span class="dot"></span> 
+              <span class="dot"></span> 
+              <span class="dot"></span> 
+              <span class="dot"></span> 
+            </div>
+        </div>
+
+      </div>
+
+    
+
+    <br>
+    <br>
+    <br>
+
+    <h1 class="title-r"> RESTAURANTS </h1>
+
+   <section class="section" id="restaurant-section">
+
+
+        <% if (res_list.length > 0) { %> <% res_list.forEach(restaurant => { %>
+            <a href="/Restaurants/<%= restaurant._id %>">
+              <div class="card">
+                <div class="img_card">
+                  <img src="<%=restaurant.image%>" alt="avatar" style="width:100%">
+                  <!-- <img src="img/R_1.jpg" alt="avatar" style="width:100%"> -->
+                </div>
+                <div class="container1">
+                  <h2><b> <%= restaurant.Restaurant_name %> </b></h2>
+                  <p>IIT KANPUR</p>
+                </div>
+              </div>
+            </a>
+            <% }) %> <% } else { %>
+              <p>There are no restaurants available.<p>
+              <% } %>
+        
+
+
+    </section>
+
+    <hr>
+
+    <section class="bottom-bar">
+                <div class="row">
+                        <h6>Contact Us</h6>
+                        <p><b>Phone: </b><a href="tel:+1234567890">+91 7842443888</a></p>
+                        <p><b>Email: </b><a href="mailto:knowyourcibo@gmail.com">knowyourcibo@gmail.com</a></p>
+                        <p><b>Instagram: </b><a href="https://www.instagram.com/knowyourcibo11/" target="_blank">@knowyourcibo</a></p>
+          </div>
+
+          <!-- copyright -->
+          <div class="copyright">© 2024 by KnowYourCibo. All rights reserved.</div>
+    </section>
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+
+<main>
+
+  <div class="social-media">
+        <ul>
+              <a href="https://www.facebook.com/profile.php?id=61557611412708" target="_blank">
+              <li><i class="fa fa-facebook" aria-hidden="true"></i></li>
+              </a>
+              <a href="https://www.instagram.com/knowyourcibo11/" target="_blank">
+              <li><i class="fa fa-instagram" aria-hidden="true"></i></li>
+              </a>
+              <a href="https://twitter.com/knowyourcibo11" target="_blank">
+              <li><i class="fa fa-twitter" aria-hidden="true"></i></li>
+              </a>
+        </ul>
+  </div>
+
+
+</main>
+
+
+<!-- transitions -->
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const baseDelay = <%= JSON.stringify(enableAnimations ? 5 : 0.5) %>;
+
+  TweenMax.from(".heading", 1, {
+    delay: baseDelay,
+    opacity: 0,
+    x: -20,
+    ease: Expo.easeInOut
+  });
+
+  TweenMax.staggerFrom(".menu-links ul li", 1, {
+    delay: baseDelay + 0.2,
+    opacity: 0,
+    x: -20,
+    ease: Power3.easeInOut
+  }, 0.08);
+
+  TweenMax.from(".search", 1, {
+    delay: baseDelay + 0.5,
+    opacity: 0,
+    x: -20,
+    ease: Expo.easeInOut
+  });
+
+  TweenMax.from(".account", 1, {
+    delay: baseDelay + 0.6,
+    opacity: 0,
+    x: -20,
+    ease: Expo.easeInOut
+  });
+
+TweenMax.from(".username", 1, {
+    delay: baseDelay + 0.6,
+    opacity: 0,
+    x: -20,
+    ease: Expo.easeInOut
+  });
+
+
+  TweenMax.staggerFrom(".social-media ul li", 1, {
+  delay: baseDelay + 0.7,
+  opacity: 0,
+  y: 20,
+  ease: Power3.easeInOut
+}, 0.08);
+
+  TweenMax.staggerFrom(".side-strip", 1, {
+  delay: baseDelay + 0.8,
+  opacity: 0,
+  y: 20,
+  ease: Power3.easeInOut
+}, 0.08);
+
+  TweenMax.from(".scrolling", 1, {
+  delay: baseDelay + 0.75,
+  opacity: 0,
+  x: -20,
+  ease: Expo.easeInOut
+});
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+if (window.location.hash) {
+  const id = window.location.hash.replace('#', '');
+  const element = document.getElementById(id);
+  if (element) {
+    // Scroll to the element with smooth behavior
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <link rel="stylesheet" href="profileStyle.css" />
+    <title>KnowYourCibo</title>
+    <meta charset="UTF-8" />
+    <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Monoton&display=swap"
+      rel="stylesheet"
+    />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+</head>
+  <body>
+    <header class="wrapper">
+      <div>
+        <div class="nav">
+          <div class="logo">KnowYourCibo</div>
+          <div class="menu-links">
+            <ul>
+              <li><a href="/home">Home</a></li>
+                <li><a href="/home#restaurant-section">Restaurants</a></li>
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/Feedback">Feedback</a></li>
+              
+            </ul>
+          </div>
+          <a href="/searchPage" class="search">
+            <i class="fa fa-search"></i>
+          </a>
+          <!-- <div class="account"><a href="#">my account</a></div> -->
+          <span>Hello, <%= userFirstName %> </span>
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+    </header>
+    <div class="social-media">
+      <ul>
+        <li><i class="fa fa-facebook" aria-hidden="true"></i></li>
+        <li><i class="fa fa-instagram" aria-hidden="true"></i></li>
+        <li><i class="fa fa-twitter" aria-hidden="true"></i></li>
+      </ul>
+    </div>
+    <main>
+      <div class="column">
+        <div class="leftcol">
+          <div class="img__container">
+            <img src="profileImages/user.jpeg" alt="Anna Smith" />
+          </div>
+          <h2><%= info.firstName %> <%= info.lastName %></h2>
+          <p><%= info.email %></p>
+          <ul class="about">
+            <li><span><%= items.length %></span>Favorites</li>
+            <li><span><%= info.no_ratings %></span>Rating</li>
+            <li><span><%= info.no_reviews %></span>Reviews</li>
+          </ul>
+          <hr />
+          <div class="content">
+            <p>
+              Savor unforgettable flavors at IIT Kanpur.
+              With a menu crafted to delight and service that exceeds expectations,
+              every visit promises a culinary adventure worth repeating.
+            </p>
+            <button>
+              <a href="editProfile">Edit Profile</a>
+            </button>
+          </div>
+        </div>
+        <div class="rightcol">
+          <ul>
+            <h2>FAVORITE ITEMS</h2>
+          </ul>
+
+          <div class="photos">
+            <% if (items.length > 0) { %> <% items.forEach(item => { %>
+            <div class="card">
+              <div class="img_card">
+                <img src= "<%=item.image%>" alt="Photo">
+                <i class="fas fa-heart heart-icon fa-2x custom-size" id="heartIcon" data-info= <%=item._id %>></i>
+              </div>
+              <div class="container1">
+                <div class="item-details">
+                  <h2><b> <%= item.name %> </b></h2> 
+                  <p><%= item.hall %></p> 
+                </div>
+                <div class="star-container">
+                    <h2><b><%= (item.ratings.reduce((sum, rating) => sum + rating.value, 0) / item.ratings.length).toFixed(1) %></b></h2>
+                    <span class="fa fa-star star-icon"></span> 
+                </div>
+              </div>
+            </div>
+            <% }) %> <% } else { %>
+              <h2>You have no favorite items.</h2>
+              <% } %>
+
+          </div>
+        </div>
+      </div>
+      
+      <div class="side-strip">
+        <span>EAT RATE CURATE</span>
+      </div>
+      <div id="messageBox" class="message-box" style="display:none;">
+        <p id="messageBoxText"></p>
+        <button onclick="closeMessageBox()">OK</button>
+      </div>
+    </main>
+    <script>
+      TweenMax.from(".logo", 1, {
+        delay: 1,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+      TweenMax.staggerFrom(
+        ".menu-links ul li",
+        1,
+        {
+          delay: 1.2,
+          opacity: 0,
+          x: -20,
+          ease: Power3.easeInOut,
+        },
+        0.08
+      );
+      TweenMax.from(".search", 1, {
+        delay: 1.5,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+      TweenMax.from(".account", 1, {
+        delay: 1.6,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+      TweenMax.staggerFrom(
+        ".social-media ul li",
+        1,
+        {
+          delay: 1.75,
+          opacity: 0,
+          y: 20,
+          ease: Power3.easeInOut,
+        },
+        0.08
+      );
+      TweenMax.from(".bottom-bar", 1, {
+        delay: 1.7,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+      TweenMax.from(".copyright", 1, {
+        delay: 1.7,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+      TweenMax.staggerFrom(
+        ".side-strip",
+        1,
+        {
+          delay: 1.8,
+          opacity: 0,
+          y: 20,
+          ease: Power3.easeInOut,
+        },
+        0.08
+      );
+      TweenMax.from(".rightcol", 1.5, {
+        delay: 1.7,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+      TweenMax.from(".leftcol", 1.5, {
+        delay: 1.6,
+        opacity: 0,
+        x: -20,
+        ease: Expo.easeInOut,
+      });
+    </script>
+
+
+    <!--Script_FOR_HEART-SYMBOL-->
+
+    <script>
+      // Add a click event listener to all heart icons with the 'heart-icon' class
+      document.querySelectorAll('.heart-icon').forEach(function(icon) {
+
+        icon.addEventListener('click', async function() {
+
+          // Toggle the 'clicked' class to change the color
+          this.classList.toggle('clicked');
+
+
+          const item_id = this.getAttribute("data-info");
+          // console.log(itemId);
+          // Send the information to the backend using AJAX or Fetch
+          // Example using Fetch API:
+          try {
+            const response = await fetch("/dislike-item", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ item_id }),
+            });
+            const data = await response.json();
+            if (data.error) {
+              alert(data.error);
+              window.location.href = "/profile";
+            } else {
+              alert(data.message);
+              window.location.href = "/profile";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        });
+      });
+    </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.menu-links a');
+      navLinks.forEach(link => {
+          if (link.getAttribute('href') === currentPath) {
+              link.addEventListener('click', function(event) {
+                  event.preventDefault();
+              });
+          }
+      });
+  });
+  function showMessage(message) {
+  $("#messageBoxText").text(message);
+  $("#messageBox").fadeIn();
+}
+
+// Function to hide the message box and reload the page
+function closeMessageBox() {
+    $("#messageBox").fadeOut('fast', function() {
+        window.location.reload(); // Reload the page after closing the message box
+    });
+}
+</script>
+
+  </body>
+</html>
